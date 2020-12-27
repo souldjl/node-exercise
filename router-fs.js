@@ -1,12 +1,9 @@
-
 var express = require('express');
 var router = express.Router();
-var User = require('./user');
-
-console.log(User)
+var User = require('./user-fs');
 
 router.get('/', function (req, res) {
-    User.find(function (err, data) {
+    User.getUser(function (err, data) {
         if (err) {
             res.status(500).end('service Error')
         }
@@ -19,8 +16,8 @@ router.get('/', function (req, res) {
 
 //删除
 router.get('/students/delete', function (req, res) {
-    var id = req.query.id.replace(/"/g, '');
-    User.deleteOne({_id: id}, function (err) {
+    var id = parseInt(req.query.id);
+    User.deleteUserById(id, function (err) {
         if (err) {
             res.status(500).end('service Error')
         }
@@ -30,9 +27,8 @@ router.get('/students/delete', function (req, res) {
 
 // 编辑信息
 router.get('/students/edit', function (req, res) {
-    console.log(req.query.id)
-    var id = req.query.id.replace(/"/g, '');
-    User.findOne({_id: id}, function (err, data) {
+    var id = parseInt(req.query.id);
+    User.getUserById(id, function (err, data) {
         if (err) {
             res.status(500).end('service Error')
         }
@@ -44,16 +40,15 @@ router.get('/students/edit', function (req, res) {
 
 // 保存编辑接口
 router.post('/students/edit', function (req, res) {
-    var id = req.body.id.replace(/"/g, '');
     var user = {};
+    user.id = parseInt(req.body.id);
     user.name = req.body.name;
     user.sex = req.body.sex;
     user.age = req.body.age;
     user.hobbies = req.body.hobbies;
     user.level = req.body.level;
-    console.log()
 
-    User.findOneAndUpdate({_id: id},user, function (err) {
+    User.updateUserById(user, function (err) {
         if (err) {
             res.status(500).end('service Error')
         }
@@ -69,17 +64,17 @@ router.get('/students/add', function (req, res) {
 
 // 新增user 接口
 router.post('/students/add', function (req, res) {
-    var newUser = new User({
+    var user = {
         name: req.body.name,
         age: req.body.age,
         hobbies: req.body.hobbies,
-        level: req.body.level,
+        level: req.body.hobbies,
         sex: req.body.sex
-    });
+    };
 
-    newUser.save(function(err) {
+    User.addUser(user, function (err) {
         if (err) {
-            return res.status(500).end('service Error')
+            res.status(500).end('service Error')
         }
         res.redirect('/')
     })

@@ -125,8 +125,8 @@
                                 <td>{{$user.hobbies}}</td>
                                 <td>{{$user.level}}</td>
                                 <td>
-                                    <a href="/students/edit?id={{$user.id}}" class="btn btn-primary">编辑</a>
-                                    <a href="/students/delete?id={{$user.id}}" class="btn btn-danger">删除</a>
+                                    <a href="/students/edit?id={{$user._id}}" class="btn btn-primary">编辑</a>
+                                    <a href="/students/delete?id={{$user._id}}" class="btn btn-danger">删除</a>
                                 </td>
                             </tr>
                             {{ /each}}
